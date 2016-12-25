@@ -1,0 +1,70 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="wailaixing.com.palmuniversity">
+
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="false"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <!-- 用户权限设置 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="WX_APPKEY"
+            android:value="${WX_APPKEY_VALUE}" />
+
+        <!-- QQ -->
+        <meta-data
+            android:name="QQ_APPKEY"
+            android:value="${QQ_APPKEY_VALUE}" />
+
+        <activity
+            android:name=".module.common.SplashActivity"
+            android:theme="@style/ColorTranslucentTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".module.common.MainActivity"
+                  android:theme="@style/MainTheme"
+                  android:screenOrientation="portrait" />
+
+
+        <activity android:name=".module.common.LoginActivity"
+                  android:theme="@style/MainTheme"
+                  android:screenOrientation="portrait" />
+
+        <activity android:name=".module.common.WaiLaiXingInfoActivity"
+                  android:theme="@style/MainTheme"
+                  android:screenOrientation="portrait"/>
+
+        <activity android:name=".module.common.AppIntroduceActivity"
+                  android:theme="@style/MainTheme"
+                  android:screenOrientation="portrait" />
+
+        <activity android:name=".module.TestActivity"
+                  android:theme="@style/MainTheme"
+                  android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

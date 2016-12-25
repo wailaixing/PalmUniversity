@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header_container"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/btn_primary_pressed_bg"
+        android:paddingTop="20dp">
+
+
+        <TextView
+            android:id="@+id/circle_image_name"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_text"
+            android:text="施"
+            android:textColor="@android:color/background_dark"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_below="@id/circle_image_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:text="姓名"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:drawableEnd="@drawable/ic_user_male" />
+
+        <TextView
+            android:id="@+id/user_class"
+            android:layout_below="@id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="班级"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:paddingTop="5dp"
+            android:paddingLeft="20dp" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>
