@@ -52,7 +52,11 @@ public class RequestTask extends AsyncTask<Void, Integer, Object>{
 	@Override
 	protected void onPostExecute(Object o) {
 		if (o instanceof AppException){
-			callBack.onFailed((AppException) o);
+			if(request.listener != null){
+				if(! request.listener.handleException((AppException)o)){
+					callBack.onFailed((AppException) o);
+				}
+			}
 		}else {
 			callBack.onSuccess(o);
 		}

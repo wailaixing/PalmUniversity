@@ -13,12 +13,14 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import wailaixing.com.palmuniversity.AppException;
+import wailaixing.com.palmuniversity.net.OnGlobalExceptionListener;
 
 /**
  * Created by shiyanqi on 16/11/26.
  */
 
-public abstract class RxBaseActivity extends RxAppCompatActivity {
+public abstract class RxBaseActivity extends RxAppCompatActivity implements OnGlobalExceptionListener{
 
 	private Unbinder bind;
 
@@ -95,4 +97,15 @@ public abstract class RxBaseActivity extends RxAppCompatActivity {
 		}
 	}
 	*/
+
+	@Override
+	public boolean handleException(AppException e) {
+		if(e.responseCode == 403){
+			if("token invalid".equals(e.getMessage())){
+				//handler
+				return true;
+			}
+		}
+		return false;
+	}
 }

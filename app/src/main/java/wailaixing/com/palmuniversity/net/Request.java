@@ -9,15 +9,20 @@ import java.util.Map;
 public class Request {
 
 	public boolean enableProgressUpdate = false;
+	public enum RequestMethod {GET, POST, DELETE};
+	private String url;
+	private String content;
+	private Map<String, String> header;
+	public OnGlobalExceptionListener listener;
 
 	public void enableProgressUpdate(boolean b) {
 		enableProgressUpdate = b;
 	}
 
-	public enum RequestMethod {GET, POST, DELETE};
-	private String url;
-	private String content;
-	private Map<String, String> header;
+
+	public void setOnGlobalExceptionListener(OnGlobalExceptionListener listener){
+		this.listener = listener;
+	}
 
 	public void setContent(String content) {
 		this.content = content;

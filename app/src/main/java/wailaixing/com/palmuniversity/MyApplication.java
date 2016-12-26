@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 /**
  * Created by shiyanqi on 16/11/18.
  */
@@ -30,6 +32,7 @@ public class MyApplication extends Application {
 
     private void init() {
         //com.wanjian.sak.LayoutManager.init(this);
+        CrashReport.initCrashReport(getApplicationContext());
     }
 
 

@@ -24,6 +24,7 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import wailaixing.com.palmuniversity.AppConst;
 import wailaixing.com.palmuniversity.R;
+import wailaixing.com.palmuniversity.base.RxBaseActivity;
 import wailaixing.com.palmuniversity.net.DoParseOnSub;
 import wailaixing.com.palmuniversity.net.iOnParse;
 import wailaixing.com.palmuniversity.utils.OkHttpUtil;
@@ -32,15 +33,22 @@ import wailaixing.com.palmuniversity.utils.OkHttpUtil;
  * Created by shiyanqi on 16/12/22.
  */
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends RxBaseActivity {
 
 	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_test);
+	public int getLayoutId() {
+		return R.layout.activity_test;
+	}
+
+	@Override
+	public void initViews(Bundle savedInstanceState) {
 
 	}
 
+	@Override
+	public void initToolBar() {
+
+	}
 
 	public void test(View view) throws Exception {
 //		getRequest();
@@ -76,6 +84,8 @@ public class TestActivity extends AppCompatActivity {
 
 		doParseOnSub.Parse();
 	}
+
+
 
 
 	/*

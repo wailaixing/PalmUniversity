@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
-        applicationId "wailaixing.com.palmuniversity"
-        minSdkVersion 21
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         jackOptions{
@@ -40,7 +41,9 @@ android {
         official {
             manifestPlaceholders = [
                     WX_APPKEY_VALUE : "",
-                    QQ_APPKEY_VALUE : ""
+                    QQ_APPKEY_VALUE : "",
+                    BUGLY_APPID : "c9db7265b1",
+                    BUGLY_ID_DEBUG : "true"
             ]
         }
 
@@ -75,5 +78,7 @@ dependencies {
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.0.0@aar'
     compile files('libs/libammsdk.jar')
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    compile 'com.tencent.bugly:crashreport:2.4.0' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+
 
 }
