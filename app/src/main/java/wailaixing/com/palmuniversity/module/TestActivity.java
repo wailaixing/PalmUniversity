@@ -43,7 +43,7 @@ public class TestActivity extends AppCompatActivity {
 
 
 	public void test(View view) throws Exception {
-		getRequest();
+//		getRequest();
 //		new Thread(() -> {
 //			Document document = null;
 //			try {
@@ -54,31 +54,31 @@ public class TestActivity extends AppCompatActivity {
 //			}
 //		}).start();
 
-//		DoParseOnSub doParseOnSub = new DoParseOnSub(AppConst.HOST_URL);
-//
-//		doParseOnSub.setIOnParse(new iOnParse() {
-//			@Override
-//			public void onParse(String htmlEle) {
-////				Logger.i(htmlEle);
-//
-////				Document doc = Jsoup.parse(htmlEle);
-////				Element element = doc.getElementsByClass("kstd_content").get(0);
-////
-////				Elements childrenEle = element.children();
-////				for(Element child : childrenEle){
-////					String url = child.getElementsByTag("img").attr("src");
-////					String title = child.getElementsByTag("span").text();
-////					System.out.println(title);
-////				}
-//
-//			}
-//		});
-//
-//		doParseOnSub.Parse();
+		DoParseOnSub doParseOnSub = new DoParseOnSub(AppConst.HOST_URL);
+
+		doParseOnSub.setIOnParse(new iOnParse() {
+			@Override
+			public void onParse(String htmlEle) {
+				Logger.i(htmlEle);
+
+				Document doc = Jsoup.parse(htmlEle);
+				Element element = doc.getElementsByClass("kstd_content").get(0);
+
+				Elements childrenEle = element.children();
+				for(Element child : childrenEle){
+					String url = child.getElementsByTag("img").attr("src");
+					String title = child.getElementsByTag("span").text();
+					System.out.println(title);
+				}
+
+			}
+		});
+
+		doParseOnSub.Parse();
 	}
 
 
-
+	/*
 	private void getRequest() {
 
 		final Request request = new Request.Builder()
@@ -111,4 +111,5 @@ public class TestActivity extends AppCompatActivity {
 			}
 		}).start();
 	}
+	*/
 }

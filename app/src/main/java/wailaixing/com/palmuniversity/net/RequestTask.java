@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import java.net.HttpURLConnection;
 
+import wailaixing.com.palmuniversity.AppException;
+
 
 /**
  * Created by shiyanqi on 16/12/8.
@@ -42,15 +44,15 @@ public class RequestTask extends AsyncTask<Void, Integer, Object>{
 				return callBack.onParse(connection);
 			}
 
-		} catch (Exception e) {
+		} catch (AppException e) {
 			return e;
 		}
 	}
 
 	@Override
 	protected void onPostExecute(Object o) {
-		if (o instanceof Exception){
-			callBack.onFailed((Exception) o);
+		if (o instanceof AppException){
+			callBack.onFailed((AppException) o);
 		}else {
 			callBack.onSuccess(o);
 		}

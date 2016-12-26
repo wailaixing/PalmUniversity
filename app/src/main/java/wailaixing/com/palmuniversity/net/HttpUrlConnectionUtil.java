@@ -1,9 +1,13 @@
 package wailaixing.com.palmuniversity.net;
 
 
+import android.webkit.URLUtil;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+
+import wailaixing.com.palmuniversity.AppException;
 
 /**
  * Created by shiyanqi on 16/12/8.
@@ -11,7 +15,10 @@ import java.util.Map;
 
 public class HttpUrlConnectionUtil {
 
-	public static HttpURLConnection execute(Request request) throws Exception {
+	public static HttpURLConnection execute(Request request) throws AppException {
+		if(! URLUtil.isNetworkUrl(request.getUrl())){
+			throw new AppException(request.getUrl() + "is illegal");
+		}
 		switch (request.getMethod()){
 			case GET:
 				get(request);
@@ -24,7 +31,7 @@ public class HttpUrlConnectionUtil {
 	}
 
 
-	public static HttpURLConnection get(Request request) throws Exception {
+	public static HttpURLConnection get(Request request) throws AppException {
 		HttpURLConnection connection = null;
 		try{
 			connection = (HttpURLConnection) new URL(request.getUrl()).openConnection();
@@ -33,13 +40,13 @@ public class HttpUrlConnectionUtil {
 
 			addHeader(connection, request);
 		}catch (Exception e){
-			throw new Exception();
+			throw new AppException(e.getMessage());
 		}
 		return connection;
 	}
 
 
-	public static HttpURLConnection post(Request request) throws Exception {
+	public static HttpURLConnection post(Request request) throws AppException {
 		HttpURLConnection connection = null;
 		try {
 			connection = (HttpURLConnection) new URL(request.getUrl()).openConnection();
@@ -49,7 +56,7 @@ public class HttpUrlConnectionUtil {
 
 			addHeader(connection, request);
 		}catch (Exception e){
-			throw  new Exception();
+			throw  new AppException(e.getMessage());
 		}
 		return connection;
 	}
