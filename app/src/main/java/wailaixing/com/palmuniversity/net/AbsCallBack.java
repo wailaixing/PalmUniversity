@@ -1,10 +1,14 @@
 package wailaixing.com.palmuniversity.net;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import wailaixing.com.palmuniversity.AppException;
 
@@ -12,65 +16,119 @@ import wailaixing.com.palmuniversity.AppException;
  * Created by shiyanqi on 16/12/10.
  */
 
-public abstract  class AbsCallBack<T> implements iCallBack<T> {
+public abstract class AbsCallBack<T> implements iCallBack<T> {
 
-	private String path = null;
+
+	private String path;
+	private volatile boolean isCancelled;
 
 	@Override
-	public T onParse(HttpURLConnection connection) throws AppException {
-		return onParse(connection, null);
+	public T parse(HttpURLConnection connection) throws AppException {
+		return parse(connection, null);
 	}
 
 	@Override
-	public T onParse(HttpURLConnection connection, OnProgressUpdatedListener listener) throws AppException {
+	public T parse(HttpURLConnection connection, OnProgressUpdatedListener listener) throws AppException {
 		try {
-			int responseCode = connection.getResponseCode();
-			if (responseCode == 200) {
-				if (path != null) {
-					FileOutputStream fop = new FileOutputStream(path);
-					InputStream is = connection.getInputStream();
-					byte[] buffer = new byte[2048];
-					int len;
-					int currLen = 0;
-					int totalLen = connection.getContentLength();
+			checkIfCancelled();
+			InputStream is = null;
+			int status = connection.getResponseCode();
+//            TODO normally 200 represent success, but you should know 200-299 all means success, please ensure with your backend colleagues
+			if (status == HttpURLConnection.HTTP_OK) {
+
+//                support gzip || deflate
+				String encoding = connection.getContentEncoding();
+				if (encoding != null && "gzip".equalsIgnoreCase(encoding))
+					is = new GZIPInputStream(connection.getInputStream());
+				else if (encoding != null
+						&& "deflate".equalsIgnoreCase(encoding))
+					is = new InflaterInputStream(connection.getInputStream());
+				else {
+					is = connection.getInputStream();
+				}
 
 
-					while ((len = is.read(buffer)) != -1) {
-						fop.write(buffer, 0, len);
-						currLen += len;
-						listener.onProgressUpdated(currLen, totalLen);
-					}
-					is.close();
-					fop.flush();
-					fop.close();
-					return bindData(path);
-				} else {
+				if (path == null) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					InputStream is = connection.getInputStream();
-
 					byte[] buffer = new byte[2048];
 					int len;
 					while ((len = is.read(buffer)) != -1) {
+						checkIfCancelled();
 						out.write(buffer, 0, len);
 					}
-
 					is.close();
 					out.flush();
 					out.close();
 					String result = new String(out.toByteArray());
-					return bindData(result);
+					T t = bindData(result);
+					return postRequest(t);
+				} else {
+					FileOutputStream out = new FileOutputStream(path);
+
+					int totalLen = connection.getContentLength();
+					int curLen = 0;
+					byte[] buffer = new byte[2048];
+					int len;
+					int percent = 0;
+					while ((len = is.read(buffer)) != -1) {
+						checkIfCancelled();
+						out.write(buffer, 0, len);
+						if (curLen * 100l / totalLen > percent) {
+							curLen += len;
+							if (listener != null) {
+								listener.onProgressUpdated(curLen, totalLen);
+							}
+							percent = (int) (curLen * 100l / totalLen);
+						}
+					}
+					is.close();
+					out.flush();
+					out.close();
+					T t = bindData(path);
+					return postRequest(t);
 				}
 			} else {
-				throw new AppException(responseCode, connection.getResponseMessage());
+//                connection.getResponseMessage();
+//                connection.getErrorStream();
+				throw new AppException(status, connection.getResponseMessage());
 			}
-		}catch (Exception e){
-			throw new AppException(e.getMessage());
+		} catch (IOException e) {
+			throw new AppException(AppException.ErrorType.SERVER, e.getMessage());
 		}
 	}
 
-	public void setFilePath(String path){
-		this.path = path;
+	protected void checkIfCancelled() throws AppException {
+		if (isCancelled) {
+			throw new AppException(AppException.ErrorType.CANCEL, "the request has been cancelled");
+		}
 	}
 
-	protected abstract T bindData(String result);
+	@Override
+	public void cancel() {
+		isCancelled = true;
+	}
+
+	@Override
+	public void onProgressUpdated(int state, int curLen, int totalLen) {
+
+	}
+
+	@Override
+	public T postRequest(T t) {
+		return t;
+	}
+
+	@Override
+	public T preRequest() {
+		return null;
+	}
+
+	protected abstract T bindData(String result) throws AppException, AppException;
+
+
+	public iCallBack setCachePath(String path) {
+		this.path = path;
+		return this;
+	}
+
 }

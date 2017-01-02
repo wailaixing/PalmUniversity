@@ -43,14 +43,9 @@ public abstract class RxBaseActivity extends RxAppCompatActivity implements OnGl
 		}
 		*/
 
-
-		//设置布局内容
 		setContentView(getLayoutId());
-		//初始化黄油刀控件绑定框架
 		bind = ButterKnife.bind(this);
-		//初始化控件
 		initViews(savedInstanceState);
-		//初始化ToolBar
 		initToolBar();
 	}
 

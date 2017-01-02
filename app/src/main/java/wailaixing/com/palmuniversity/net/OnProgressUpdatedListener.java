@@ -5,5 +5,5 @@ package wailaixing.com.palmuniversity.net;
  */
 
 public interface OnProgressUpdatedListener {
-	void onProgressUpdated(int curLen, int totalLen);
+	void onProgressUpdated(int curLen,int totalLen);
 }

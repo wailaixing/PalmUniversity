@@ -3,23 +3,33 @@ package wailaixing.com.palmuniversity.net;
 
 import android.webkit.URLUtil;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.OkUrlFactory;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
 
 import wailaixing.com.palmuniversity.AppException;
 
 /**
- * Created by shiyanqi on 16/12/8.
+ * Created by shiyanqi on 17/1/2.
  */
 
-public class HttpUrlConnectionUtil {
-	public static HttpURLConnection execute(Request request,OnProgressUpdatedListener listener) throws AppException {
+public class OKHttpUrlConnectionUtil {
+	private static OkHttpClient mClient;
+
+	public synchronized static HttpURLConnection execute(Request request, OnProgressUpdatedListener listener) throws AppException {
 		if (!URLUtil.isNetworkUrl(request.url)) {
 			throw new AppException(AppException.ErrorType.MANUAL,"the url :" + request.url + " is not valid");
+		}
+		if (mClient == null){
+			initializeOkHttp();
 		}
 		switch (request.method) {
 			case GET:
@@ -33,13 +43,17 @@ public class HttpUrlConnectionUtil {
 		return null;
 	}
 
+	private static void initializeOkHttp() {
+		mClient = new OkHttpClient();
+	}
+
 
 	private static HttpURLConnection get(Request request) throws AppException {
 		try {
 
 			request.checkIfCancelled();
 
-			HttpURLConnection connection = (HttpURLConnection) new URL(request.url).openConnection();
+			HttpURLConnection connection = new OkUrlFactory(mClient).open(new URL(request.url));
 			connection.setRequestMethod(request.method.name());
 			connection.setConnectTimeout(15 * 3000);
 			connection.setReadTimeout(15 * 3000);
@@ -48,9 +62,9 @@ public class HttpUrlConnectionUtil {
 
 			request.checkIfCancelled();
 			return connection;
-		} catch (InterruptedIOException e) {
-			throw new AppException(AppException.ErrorType.TIMEOUT, e.getMessage());
-		} catch (IOException e) {
+		} catch (MalformedURLException e) {
+			throw new AppException(AppException.ErrorType.SERVER, e.getMessage());
+		} catch (ProtocolException e) {
 			throw new AppException(AppException.ErrorType.SERVER, e.getMessage());
 		}
 	}
@@ -62,7 +76,7 @@ public class HttpUrlConnectionUtil {
 		try {
 			request.checkIfCancelled();
 
-			connection = (HttpURLConnection) new URL(request.url).openConnection();
+			connection = new OkUrlFactory(mClient).open(new URL(request.url));
 			connection.setRequestMethod(request.method.name());
 			connection.setConnectTimeout(15 * 3000);
 			connection.setReadTimeout(15 * 3000);
@@ -109,3 +123,4 @@ public class HttpUrlConnectionUtil {
 		}
 	}
 }
+

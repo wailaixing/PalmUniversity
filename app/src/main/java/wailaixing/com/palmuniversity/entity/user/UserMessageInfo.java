@@ -1,9 +1,12 @@
 package wailaixing.com.palmuniversity.entity.user;
 
+import wailaixing.com.palmuniversity.annotation.Table;
+
 /**
  * Created by shiyanqi on 16/12/2.
  */
 
+@Table(name="usermessageinfo")
 public class UserMessageInfo {
 
 	private String department;

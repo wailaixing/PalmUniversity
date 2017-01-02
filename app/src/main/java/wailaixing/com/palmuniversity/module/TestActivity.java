@@ -1,8 +1,10 @@
 package wailaixing.com.palmuniversity.module;
 
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.orhanobut.logger.Logger;
@@ -26,6 +28,9 @@ import wailaixing.com.palmuniversity.AppConst;
 import wailaixing.com.palmuniversity.R;
 import wailaixing.com.palmuniversity.base.RxBaseActivity;
 import wailaixing.com.palmuniversity.net.DoParseOnSub;
+import wailaixing.com.palmuniversity.net.HttpUrlConnectionUtil;
+import wailaixing.com.palmuniversity.net.RequestTask;
+import wailaixing.com.palmuniversity.net.StringCallBack;
 import wailaixing.com.palmuniversity.net.iOnParse;
 import wailaixing.com.palmuniversity.utils.OkHttpUtil;
 
@@ -33,35 +38,19 @@ import wailaixing.com.palmuniversity.utils.OkHttpUtil;
  * Created by shiyanqi on 16/12/22.
  */
 
-public class TestActivity extends RxBaseActivity {
+public class TestActivity extends AppCompatActivity {
 
 	@Override
-	public int getLayoutId() {
-		return R.layout.activity_test;
-	}
-
-	@Override
-	public void initViews(Bundle savedInstanceState) {
-
-	}
-
-	@Override
-	public void initToolBar() {
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Debug.startMethodTracing("love_world_");
+		setContentView(R.layout.activity_test);
 
 	}
 
 	public void test(View view) throws Exception {
-//		getRequest();
-//		new Thread(() -> {
-//			Document document = null;
-//			try {
-//				document = Jsoup.connect("http://www.baidu.com").get();
-//				System.out.println(document.html());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}).start();
 
+		/*
 		DoParseOnSub doParseOnSub = new DoParseOnSub(AppConst.HOST_URL);
 
 		doParseOnSub.setIOnParse(new iOnParse() {
@@ -83,9 +72,42 @@ public class TestActivity extends RxBaseActivity {
 		});
 
 		doParseOnSub.Parse();
+		*/
+
+		wailaixing.com.palmuniversity.net.Request request = new wailaixing.com.palmuniversity.net.Request();
+		request.setMethod(wailaixing.com.palmuniversity.net.Request.RequestMethod.GET);
+		request.setUrl("https://www.woqukaoqin.com");
+		RequestTask requestTask = new RequestTask(request);
+		requestTask.setCallBack(new StringCallBack() {
+			@Override
+			public void onSuccess(String result) {
+				Log.e("===============>", result);
+				Debug.stopMethodTracing();
+//				Document doc = Jsoup.parse(result);
+//				Element element = doc.getElementsByClass("kstd_content").get(0);
+//
+//				Elements childrenEle = element.children();
+//				for (Element child : childrenEle) {
+//					String url = child.getElementsByTag("img").attr("src");
+//					String title = child.getElementsByTag("span").text();
+//					Logger.i(title);
+//				}
+
+			}
+
+			@Override
+			public void onFailed(Exception e) {
+
+			}
+
+			@Override
+			public void onProgressUpdated(int curLen, int totalLen) {
+
+			}
+		});
+		requestTask.execute();
+
 	}
-
-
 
 
 	/*

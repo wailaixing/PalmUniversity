@@ -7,5 +7,5 @@ import wailaixing.com.palmuniversity.AppException;
  */
 
 public interface OnGlobalExceptionListener {
-	public boolean handleException(AppException e);
+	boolean handleException(AppException exception);
 }
